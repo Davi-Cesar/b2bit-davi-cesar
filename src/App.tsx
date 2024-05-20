@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
 
-function App() {
+import Login from './components/Login';
+import LoggedIn from './components/LoggedIn';
+import { Tokens } from './types/User';
+
+export default function App()  {
+  const [tokens, setTokens] = useState<Tokens | null>(null);
+
+  useEffect(() => {
+    
+    const savedAccessToken = localStorage.getItem('accessToken');
+    const savedRefreshToken = localStorage.getItem('refreshToken');
+
+    if (savedAccessToken && savedRefreshToken) {
+      setTokens({ access: savedAccessToken, refresh: savedRefreshToken });
+    }
+  }, []);
+
+  const handleLogin = (tokens: Tokens) => {
+    setTokens(tokens)
+  };
+
+  const handleLogout = () => {
+    setTokens(null);
+  };
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    { tokens ? ( // Verifica se token não é null
+      <LoggedIn tokens={tokens} onLogout={handleLogout} />
+    ) : (
+      <Login onLogin={handleLogin}  />
+    )}
+  </div>
   );
-}
+};
 
-export default App;
