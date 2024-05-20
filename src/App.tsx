@@ -4,6 +4,7 @@ import Login from './components/Login';
 import LoggedIn from './components/LoggedIn';
 import { Tokens } from './types/User';
 
+document.title = "b2bit";
 export default function App()  {
   const [tokens, setTokens] = useState<Tokens | null>(null);
 
